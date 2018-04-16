@@ -171,6 +171,12 @@ var escPress = function (evt) {
 };
 
 var openUnloadPopup = function () {
+  var uploadScale = document.querySelector('.scale');
+  var uploadDefaultEffect = document.querySelector('#effect-none');
+
+  uploadScale.classList.add('hidden');
+  uploadDefaultEffect.checked = 'true';
+
   filesUploadOverlay.classList.remove('hidden');
   document.addEventListener('keydown', escPress);
 };
@@ -190,16 +196,17 @@ cancelUnloadButton.addEventListener('click', closeUnloadPopup);
 var changeUploadImgSettings = function () {
 
   var imageUploadPreview = document.querySelector('.img-upload__preview');
-  var imageUploadScalePin = document.querySelector('.scale__pin');
-  var imageUploadScaleValue = document.querySelector('.scale__value');
-  var imageUploadScaleLine = document.querySelector('.scale__line');
-  var imageUploadScaleLevel = document.querySelector('.scale__level');
+  var imageUploadScale = document.querySelector('.scale');
+  var imageUploadScalePin = imageUploadScale.querySelector('.scale__pin');
+  var imageUploadScaleValue = imageUploadScale.querySelector('.scale__value');
+  var imageUploadScaleLine = imageUploadScale.querySelector('.scale__line');
+  var imageUploadScaleLevel = imageUploadScale.querySelector('.scale__level');
   var currentEffect = '';
 
   var imageEffect = document.querySelectorAll('.effects__radio');
   for (var i = 0; i < imageEffect.length; i++) {
-    imageEffect[i].addEventListener('click', function () {
-      currentEffect = this.value;
+    imageEffect[i].addEventListener('click', function (evt) {
+      currentEffect = evt.target.value;
       imageUploadPreview.style = '';
       imageUploadScalePin.style = 'left: 100%';
       imageUploadScaleLevel.style = 'width: 100%';
@@ -208,8 +215,12 @@ var changeUploadImgSettings = function () {
       for (var j = 0; j < imageEffect.length; j++) {
         imageUploadPreview.classList.remove('effects__preview--' + imageEffect[j].value);
       }
-
-      imageUploadPreview.classList.add('effects__preview--' + this.value);
+      if (evt.target.value !== 'none') {
+        imageUploadScale.classList.remove('hidden');
+        imageUploadPreview.classList.add('effects__preview--' + evt.target.value);
+      } else {
+        imageUploadScale.classList.add('hidden');
+      }
     });
   }
 
@@ -254,21 +265,20 @@ changeUploadImgSettings();
 */
 
 var picture = document.querySelectorAll('.picture__link');
-
 var bigPicture = document.querySelector('.big-picture');
-var bigPictureClose = document.querySelector('.big-picture__cancel');
-var bigPictureImg = document.querySelector('.big-picture__img img');
-var bigPictureLikes = document.querySelector('.likes-count');
+var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
+var bigPictureImg = bigPicture.querySelector('.big-picture__img img');
+var bigPictureLikes = bigPicture.querySelector('.likes-count');
 
 var popupEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closePicturePopup();
   }
 };
-var OpenPicturePopup = function () {
+var openPicturePopup = function (evt) {
   bigPicture.classList.remove('hidden');
-  bigPictureImg.src = this.querySelector('.picture__img').src;
-  bigPictureLikes.textContent = this.querySelector('.picture__stat--likes').textContent;
+  bigPictureImg.src = evt.currentTarget.querySelector('.picture__img').src;
+  bigPictureLikes.textContent = evt.currentTarget.querySelector('.picture__stat--likes').textContent;
 
   document.addEventListener('keydown', popupEscPress);
 };
@@ -278,6 +288,6 @@ var closePicturePopup = function () {
 };
 
 for (var i = 0; i < picture.length; i++) {
-  picture[i].addEventListener('click', OpenPicturePopup);
+  picture[i].addEventListener('click', openPicturePopup);
 }
 bigPictureClose.addEventListener('click', closePicturePopup);
