@@ -23,8 +23,10 @@ var DESCRIPTION = [
   'Вот это тачка!'
 ];
 
+var ESC_KEYCODE = 27;
+
 /*
-1. массив из обьектов
+  массив из обьектов
 */
 
 var getPicturesPath = function (number) {
@@ -86,9 +88,9 @@ var getPicturesArray = function (number) {
 getPicturesArray(OBJECTS_COUNT);
 
 /*
-2,
-3 шаблон и отрисовка
+  шаблон и отрисовка
 */
+
 var picturesRender = function () {
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var pictureList = document.querySelector('.pictures');
@@ -106,11 +108,11 @@ var picturesRender = function () {
 picturesRender();
 
 /*
-4 показать .big-picture
+  показать .big-picture
 */
+
 var bigPictureRender = function () {
   var bigPicture = document.querySelector('.big-picture');
-  bigPicture.classList.remove('hidden');
 
   var bigPictureSrc = bigPicture.querySelector('.big-picture__img img');
   bigPictureSrc.src = pictures[0].url;
@@ -142,8 +144,9 @@ var bigPictureRender = function () {
 };
 
 bigPictureRender();
+
 /*
-5 спрятать счетчик и новые комментарии
+  спрятать счетчик и новые комментарии
 */
 
 var commentCount = document.querySelector('.social__comment-count');
@@ -151,3 +154,140 @@ commentCount.classList.add('.visually-hidden');
 
 var commentLoadMore = document.querySelector('.social__comment-loadmore');
 commentLoadMore.classList.add('.visually-hidden');
+
+/*
+  загрузка изображения и показ формы редактирования
+*/
+
+var filesUpload = document.querySelector('#upload-file');
+var filesUploadOverlay = document.querySelector('.img-upload__overlay');
+var cancelUnloadButton = document.querySelector('.cancel');
+
+var escPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    filesUpload.value = '';
+    closeUnloadPopup();
+  }
+};
+
+var openUnloadPopup = function () {
+  var uploadScale = document.querySelector('.scale');
+  var uploadDefaultEffect = document.querySelector('#effect-none');
+
+  uploadScale.classList.add('hidden');
+  uploadDefaultEffect.checked = 'true';
+
+  filesUploadOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', escPress);
+};
+
+var closeUnloadPopup = function () {
+  filesUploadOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', escPress);
+};
+
+filesUpload.addEventListener('change', openUnloadPopup);
+cancelUnloadButton.addEventListener('click', closeUnloadPopup);
+
+/*
+  применение эффектов к изображению
+*/
+
+var changeUploadImgSettings = function () {
+
+  var imageUploadPreview = document.querySelector('.img-upload__preview');
+  var imageUploadScale = document.querySelector('.scale');
+  var imageUploadScalePin = imageUploadScale.querySelector('.scale__pin');
+  var imageUploadScaleValue = imageUploadScale.querySelector('.scale__value');
+  var imageUploadScaleLine = imageUploadScale.querySelector('.scale__line');
+  var imageUploadScaleLevel = imageUploadScale.querySelector('.scale__level');
+  var currentEffect = '';
+
+  var imageEffect = document.querySelectorAll('.effects__radio');
+  for (var i = 0; i < imageEffect.length; i++) {
+    imageEffect[i].addEventListener('click', function (evt) {
+      currentEffect = evt.target.value;
+      imageUploadPreview.style = '';
+      imageUploadScalePin.style = 'left: 100%';
+      imageUploadScaleLevel.style = 'width: 100%';
+      imageUploadScaleValue.value = '100';
+
+      for (var j = 0; j < imageEffect.length; j++) {
+        imageUploadPreview.classList.remove('effects__preview--' + imageEffect[j].value);
+      }
+      if (evt.target.value !== 'none') {
+        imageUploadScale.classList.remove('hidden');
+        imageUploadPreview.classList.add('effects__preview--' + evt.target.value);
+      } else {
+        imageUploadScale.classList.add('hidden');
+      }
+    });
+  }
+
+  imageUploadScaleLine.addEventListener('click', function (evt) {
+    var clickPositionX = evt.offsetX;
+    var scalePositionProportion = Math.round(clickPositionX / imageUploadScaleLine.offsetWidth * 100);
+
+    imageUploadScalePin.style = 'left: ' + scalePositionProportion + '%';
+    imageUploadScaleLevel.style = 'width: ' + scalePositionProportion + '%';
+    imageUploadScaleValue.value = scalePositionProportion;
+
+    var changeFilters = function (min, max) {
+      var scaleProportionStyle = clickPositionX / imageUploadScaleLine.offsetWidth;
+      var value = max - min;
+      var filterValue = scaleProportionStyle * value + min;
+      return filterValue;
+    };
+
+    switch (currentEffect) {
+      case 'chrome':
+        imageUploadPreview.style = 'filter: grayscale(' + changeFilters(0, 1) + ')';
+        break;
+      case 'sepia':
+        imageUploadPreview.style = 'filter: sepia(' + changeFilters(0, 1) + ')';
+        break;
+      case 'marvin':
+        imageUploadPreview.style = 'filter: invert(' + changeFilters(0, 100) + '%)';
+        break;
+      case 'phobos':
+        imageUploadPreview.style = 'filter: blur(' + changeFilters(0, 3) + 'px)';
+        break;
+      case 'heat':
+        imageUploadPreview.style = 'filter: brightness(' + changeFilters(1, 3) + ')';
+        break;
+    }
+  });
+};
+changeUploadImgSettings();
+
+/*
+  показ изображения в полноэкранном режиме
+*/
+
+var picture = document.querySelectorAll('.picture__link');
+var bigPicture = document.querySelector('.big-picture');
+var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
+var bigPictureImg = bigPicture.querySelector('.big-picture__img img');
+var bigPictureLikes = bigPicture.querySelector('.likes-count');
+
+var popupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePicturePopup();
+  }
+};
+var openPicturePopup = function (evt) {
+  bigPicture.classList.remove('hidden');
+  bigPictureImg.src = evt.currentTarget.querySelector('.picture__img').src;
+  bigPictureLikes.textContent = evt.currentTarget.querySelector('.picture__stat--likes').textContent;
+
+  document.addEventListener('keydown', popupEscPress);
+};
+var closePicturePopup = function () {
+  bigPicture.classList.add('hidden');
+  document.removeEventListener('keydown', popupEscPress);
+};
+
+for (var i = 0; i < picture.length; i++) {
+  picture[i].addEventListener('click', openPicturePopup);
+}
+bigPictureClose.addEventListener('click', closePicturePopup);
