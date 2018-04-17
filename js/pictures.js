@@ -225,7 +225,7 @@ var changeUploadImgSettings = function () {
   }
 
   imageUploadScaleLine.addEventListener('click', function (evt) {
-    var clickPositionX = evt.offsetX === undefined ? evt.layerX : evt.offsetX;
+    var clickPositionX = evt.offsetX;
     var scalePositionProportion = Math.round(clickPositionX / imageUploadScaleLine.offsetWidth * 100);
 
     imageUploadScalePin.style = 'left: ' + scalePositionProportion + '%';
