@@ -319,7 +319,7 @@ var checkRepeatingHashtags = function (arr) {
     result.push(str);
   }
   return false;
-}
+};
 
 var uploadHashtags = filesUploadOverlay.querySelector('.text__hashtags');
 var uploadDescription = filesUploadOverlay.querySelector('.text__description');
