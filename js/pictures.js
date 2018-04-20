@@ -307,7 +307,7 @@ changeUploadImgSettings();
   проверка хэштегов на валидность, отмеза закрытия на esc
 */
 
-function checkRepeatingHashtags(arr) {
+var checkRepeatingHashtags = function (arr) {
   var result = [];
   for (var i = 0; i < arr.length; i++) {
     var str = arr[i].toLowerCase();
@@ -321,24 +321,24 @@ function checkRepeatingHashtags(arr) {
   return false;
 }
 
-var uploadHashtags = document.querySelector('.text__hashtags');
-var uploadDescription = document.querySelector('.text__description');
+var uploadHashtags = filesUploadOverlay.querySelector('.text__hashtags');
+var uploadDescription = filesUploadOverlay.querySelector('.text__description');
 
 var checkHashtagValidity = function () {
 
   var hashtagArray = uploadHashtags.value;
   var hashtagArraySplitted = hashtagArray.split(/\s+/g).filter(Boolean);
 
-  var minLength = 2;
-  var maxLength = 19;
+  var MIN_LENGTH = 2;
+  var MAX_LENGTH = 20;
   var lengthError = 'Минимальная длина хэш-тега 2 символа, а максимальная 20';
   var typeError = 'Хэш-тег должен начинаться с # и состоять из букв, цифр или нижнего подчеркивания';
-  var maxHashtagsError = 'Максимальное количетсво хэш-тегов - 5';
+  var maxHashtagsError = 'Максимальное количество хэш-тегов - 5';
   var repeatError = 'Хэш-теги не должны повторятся';
 
-  if (hashtagArraySplitted.length < 5) {
+  if (hashtagArraySplitted.length <= 5) {
     for (var i = 0; i < hashtagArraySplitted.length; i++) {
-      if (hashtagArraySplitted[i].length < minLength || hashtagArraySplitted[i].length > maxLength) {
+      if (hashtagArraySplitted[i].length < MIN_LENGTH || hashtagArraySplitted[i].length > MAX_LENGTH) {
         uploadHashtags.setCustomValidity(lengthError);
       } else if (!hashtagArraySplitted[i].match(/^#(\w)+$/g)) {
         uploadHashtags.setCustomValidity(typeError);
