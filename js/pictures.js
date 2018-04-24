@@ -248,13 +248,10 @@ var changeUploadImgSettings = function () {
 
     var sliderCoods = getCoords(imageUploadScaleLine);
     var pinCoods = getCoords(imageUploadScalePin);
-    var shiftX = evt.pageX - pinCoods.left;
+    var shiftX = evt.pageX - pinCoods;
 
-    var onMouseMove = function (e) {
-      e.preventDefault();
-
-      var positionX = e.pageX - shiftX - sliderCoods.left;
-
+    var renderPictureEffect = function (moveEvt) {
+      var positionX = moveEvt.pageX - shiftX - sliderCoods;
       if (positionX < 0) {
         positionX = 0;
       } else if (positionX > imageUploadScaleLine.offsetWidth) {
@@ -268,8 +265,14 @@ var changeUploadImgSettings = function () {
       applyFilters(currentEffect, positionX);
     };
 
+    var onMouseMove = function (e) {
+      e.preventDefault();
+      renderPictureEffect(e);
+    };
+
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
+      renderPictureEffect(upEvt);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -280,13 +283,11 @@ var changeUploadImgSettings = function () {
 
   });
 
-  function getCoords(elem) {
+  var getCoords = function (elem) {
     var box = elem.getBoundingClientRect();
 
-    return {
-      left: box.left + pageXOffset
-    };
-  }
+    return box.left + pageXOffset;
+  };
 
   var changeFilters = function (min, max, position) {
     var scaleProportionStyle = position / imageUploadScaleLine.offsetWidth;
