@@ -240,42 +240,80 @@ var changeUploadImgSettings = function () {
   }
 
   /*
-    насыщенность фильтра
+     насыщенность фильтра по перетаскиванию
   */
 
-  imageUploadScaleLine.addEventListener('click', function (evt) {
-    var clickPositionX = evt.offsetX;
-    var scalePositionProportion = Math.round(clickPositionX / imageUploadScaleLine.offsetWidth * 100);
+  imageUploadScalePin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
 
-    imageUploadScalePin.style = 'left: ' + scalePositionProportion + '%';
-    imageUploadScaleLevel.style = 'width: ' + scalePositionProportion + '%';
-    imageUploadScaleValue.value = scalePositionProportion;
+    var sliderCoods = getCoords(imageUploadScaleLine);
+    var pinCoods = getCoords(imageUploadScalePin);
+    var shiftX = evt.pageX - pinCoods;
 
-    var changeFilters = function (min, max) {
-      var scaleProportionStyle = clickPositionX / imageUploadScaleLine.offsetWidth;
-      var value = max - min;
-      var filterValue = scaleProportionStyle * value + min;
-      return filterValue;
+    var renderPictureEffect = function (renderEvt) {
+      var positionX = renderEvt.pageX - shiftX - sliderCoods;
+      if (positionX < 0) {
+        positionX = 0;
+      } else if (positionX > imageUploadScaleLine.offsetWidth) {
+        positionX = imageUploadScaleLine.offsetWidth;
+      }
+
+      imageUploadScaleLevel.style.width = positionX + 'px';
+      imageUploadScalePin.style.left = positionX + 'px';
+      imageUploadScaleValue.value = positionX;
+
+      applyFilters(currentEffect, positionX);
     };
 
-    switch (currentEffect) {
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      renderPictureEffect(moveEvt);
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+  });
+
+  var getCoords = function (elem) {
+    var box = elem.getBoundingClientRect();
+
+    return box.left + pageXOffset;
+  };
+
+  var changeFilters = function (min, max, position) {
+    var scaleProportionStyle = position / imageUploadScaleLine.offsetWidth;
+    var value = max - min;
+    var filterValue = scaleProportionStyle * value + min;
+    return filterValue;
+  };
+
+  var applyFilters = function (filter, position) {
+    switch (filter) {
       case 'chrome':
-        imageUploadPreview.style = 'filter: grayscale(' + changeFilters(0, 1) + ')';
+        imageUploadPreview.style = 'filter: grayscale(' + changeFilters(0, 1, position) + ')';
         break;
       case 'sepia':
-        imageUploadPreview.style = 'filter: sepia(' + changeFilters(0, 1) + ')';
+        imageUploadPreview.style = 'filter: sepia(' + changeFilters(0, 1, position) + ')';
         break;
       case 'marvin':
-        imageUploadPreview.style = 'filter: invert(' + changeFilters(0, 100) + '%)';
+        imageUploadPreview.style = 'filter: invert(' + changeFilters(0, 100, position) + '%)';
         break;
       case 'phobos':
-        imageUploadPreview.style = 'filter: blur(' + changeFilters(0, 3) + 'px)';
+        imageUploadPreview.style = 'filter: blur(' + changeFilters(0, 3, position) + 'px)';
         break;
       case 'heat':
-        imageUploadPreview.style = 'filter: brightness(' + changeFilters(1, 3) + ')';
+        imageUploadPreview.style = 'filter: brightness(' + changeFilters(1, 3, position) + ')';
         break;
     }
-  });
+  };
 
   /*
     зум
