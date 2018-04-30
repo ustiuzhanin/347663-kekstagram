@@ -1,5 +1,9 @@
 'use strict';
 
+/*
+  превью
+*/
+
 (function () {
   var picture = document.querySelectorAll('.picture__link');
   var bigPicture = document.querySelector('.big-picture');
@@ -14,7 +18,7 @@
   commentLoadMore.classList.add('visually-hidden');
 
   var popupEscPress = function (evt) {
-    if (evt.keyCode === window.data.keyCodes.escape) {
+    if (evt.keyCode === window.util.keyCodes.escape) {
       closePicturePopup();
     }
   };
@@ -35,28 +39,28 @@
   }
   bigPictureClose.addEventListener('click', closePicturePopup);
 
+  var commentsRender = function () {
+
+    var addComment = function () {
+      var comment = '';
+      for (var j = 0; i < window.data.pictures[0].comments.length; j++) {
+        comment += '<li class="social__comment social__comment--text">' +
+        '<img class="social__picture" src="img/avatar-' + window.util.getRandomInteger(1, 6) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35">'
+          + window.data.pictures[0].comments[j] +
+        '</li>';
+      }
+      return comment;
+    };
+
+    var bigPictureUl = bigPicture.querySelector('.social__comments');
+
+    while (bigPictureUl.hasChildNodes()) {
+      bigPictureUl.removeChild(bigPictureUl.firstChild);
+    }
+
+    bigPictureUl.insertAdjacentHTML('afterbegin', addComment());
+
+  };
+  commentsRender();
+
 })();
-
-
-/*
-я рендер комментариев доработаю в следующем задании когда будут данные, ок?
-*/
-
-// var addComment = function () {
-//     var comment = '';
-//     for (var i = 0; i < window.data.pictures[0].comments.length; i++) {
-//       comment += '<li class="social__comment social__comment--text">' +
-//       '<img class="social__picture" src="img/avatar-' + window.util.getRandomInteger(1, 6) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35">'
-//       + window.data.pictures[0].comments[i] +
-//       '</li>';
-//     }
-//     return comment;
-//   };
-//
-//   var bigPictureUl = bigPicture.querySelector('.social__comments');
-//
-//   while (bigPictureUl.hasChildNodes()) {
-//     bigPictureUl.removeChild(bigPictureUl.firstChild);
-//   }
-//
-//   bigPictureUl.insertAdjacentHTML('afterbegin', addComment());

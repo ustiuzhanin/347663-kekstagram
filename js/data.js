@@ -75,10 +75,7 @@
   var picturesRender = getPicturesArray(OBJECTS_COUNT);
 
   window.data = {
-    pictures: picturesRender,
-    keyCodes: {
-      escape: 27
-    }
-  }
+    pictures: picturesRender
+  };
 
 })();

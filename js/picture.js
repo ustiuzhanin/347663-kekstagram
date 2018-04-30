@@ -1,6 +1,11 @@
 'use strict';
 
+/*
+   отрисовка миниатюры
+*/
+
 (function () {
+
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var pictureList = document.querySelector('.pictures');
 
@@ -13,4 +18,5 @@
 
     pictureList.appendChild(pictureElement);
   }
+
 })();

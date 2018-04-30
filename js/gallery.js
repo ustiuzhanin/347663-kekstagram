@@ -1,5 +1,9 @@
 'use strict';
 
+/*
+  отрытие/закрытие окна загрузки изображений
+*/
+
 (function () {
 
   var filesUpload = document.querySelector('#upload-file');
@@ -7,7 +11,7 @@
   var cancelUnloadButton = document.querySelector('.cancel');
 
   var escPress = function (evt) {
-    if (evt.keyCode === window.data.keyCodes.escape) {
+    if (evt.keyCode === window.util.keyCodes.escape) {
       filesUpload.value = '';
       closeUnloadPopup();
     }
