@@ -9,7 +9,7 @@
   window.picturesArray = [];
 
   var onSuccesHandler = function (data) {
-    var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
+    var pictureTemplate = document.querySelector('#picture').content;
     var pictureList = document.querySelector('.pictures');
     window.picturesArray = data;
 
@@ -20,6 +20,7 @@
 
       pictureElement.querySelector('.picture__stat--likes').textContent = window.picturesArray[i].likes;
       pictureElement.querySelector('.picture__stat--comments').textContent = window.picturesArray[i].comments.length;
+      pictureElement.querySelector('.picture__link').dataset.number = i;
 
       pictureList.appendChild(pictureElement);
     }
