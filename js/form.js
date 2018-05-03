@@ -20,9 +20,6 @@
   var pictureZoomPlus = imageUploadForm.querySelector('.resize__control--plus');
   var pictureZoomMinus = imageUploadForm.querySelector('.resize__control--minus');
   var pictureZoomValue = imageUploadForm.querySelector('.resize__control--value');
-  var zoomValue = 100;
-  pictureZoomValue.value = zoomValue + '%';
-  pictureZoom.style.zIndex = '1';
 
   /*
   фильтр
@@ -39,7 +36,6 @@
         imageUploadScaleLevel.style = 'width: 100%';
         imageUploadScaleValue.value = '100';
         pictureZoomValue.value = '100%';
-        zoomValue = 100;
 
         for (var j = 0; j < imageEffect.length; j++) {
           imageUploadPreview.classList.remove('effects__preview--' + imageEffect[j].value);
@@ -143,6 +139,10 @@
 
   var changeZoom = function () {
 
+    var zoomValue = 100;
+    pictureZoomValue.value = zoomValue + '%';
+    pictureZoom.style.zIndex = '1';
+
     var pictureZoomIn = function () {
       if (zoomValue < 100) {
         zoomValue += 25;
@@ -241,6 +241,13 @@
   var errorLinkLast = document.querySelector('.error__link:last-child');
   var filesUpload = document.querySelector('#upload-file');
 
+  var resetFormStyles = function () {
+    imageUploadPreview.classList.remove(imageUploadPreview.classList[1]);
+    imageUploadPreview.style.filter = 'none';
+    imageUploadPreview.style.transform = 'none';
+    pictureZoomValue.value = '100%';
+  };
+
   var onSuccesHandler = function () {
     imageUploadForm.reset();
     window.gallery.close();
@@ -268,7 +275,7 @@
   imageUploadForm.addEventListener('submit', onFormSubmit);
 
   window.form = {
-    imagePreview: imageUploadPreview
+    resetFormStyles: resetFormStyles
   };
 
 })();
