@@ -28,7 +28,11 @@
   };
 
   var onErrorHandler = function (message) {
-    console.error(message);
+    var errElement = document.createElement('div');
+
+    errElement.classList.add('pictures-load-error');
+    errElement.textContent = message;
+    document.body.appendChild(errElement);
   };
 
   window.backend.load(onSuccesHandler, onErrorHandler);

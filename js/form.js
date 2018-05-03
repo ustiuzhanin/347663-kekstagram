@@ -241,13 +241,11 @@
   var errorLinkLast = document.querySelector('.error__link:last-child');
   var filesUpload = document.querySelector('#upload-file');
 
-  var onSuccesHandler = function (message) {
+  var onSuccesHandler = function () {
     imageUploadForm.reset();
     window.gallery.close();
-    alert(message);
   };
-  var onErrorHandler = function (message) {
-    alert(message);
+  var onErrorHandler = function () {
     messageError.classList.remove('hidden');
     imageUploadForm.reset();
     window.gallery.close();
