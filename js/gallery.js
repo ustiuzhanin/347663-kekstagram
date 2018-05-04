@@ -30,10 +30,15 @@
 
   var closeUnloadPopup = function () {
     filesUploadOverlay.classList.add('hidden');
+    window.form.resetFormStyles();
     document.removeEventListener('keydown', escPress);
   };
 
   filesUpload.addEventListener('change', openUnloadPopup);
   cancelUnloadButton.addEventListener('click', closeUnloadPopup);
 
+  window.gallery = {
+    close: closeUnloadPopup,
+    open: openUnloadPopup,
+  };
 })();
