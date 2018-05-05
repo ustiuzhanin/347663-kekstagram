@@ -8,7 +8,7 @@
 
   var filesUpload = document.querySelector('#upload-file');
   var filesUploadOverlay = document.querySelector('.img-upload__overlay');
-  var cancelUnloadButton = document.querySelector('.cancel');
+  var cancelUnloadButton = filesUploadOverlay.querySelector('.cancel');
 
   var escPress = function (evt) {
     if (evt.keyCode === window.util.keyCodes.escape) {
@@ -18,8 +18,8 @@
   };
 
   var openUnloadPopup = function () {
-    var uploadScale = document.querySelector('.scale');
-    var uploadDefaultEffect = document.querySelector('#effect-none');
+    var uploadScale = filesUploadOverlay.querySelector('.scale');
+    var uploadDefaultEffect = filesUploadOverlay.querySelector('#effect-none');
 
     uploadScale.classList.add('hidden');
     uploadDefaultEffect.checked = 'true';
@@ -39,6 +39,6 @@
 
   window.gallery = {
     close: closeUnloadPopup,
-    open: openUnloadPopup,
+    open: openUnloadPopup
   };
 })();

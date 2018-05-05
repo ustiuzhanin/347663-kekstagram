@@ -185,8 +185,8 @@
       return false;
     };
 
-    var uploadHashtags = document.querySelector('.text__hashtags');
-    var uploadDescription = document.querySelector('.text__description');
+    var uploadHashtags = imageUploadForm.querySelector('.text__hashtags');
+    var uploadDescription = imageUploadForm.querySelector('.text__description');
 
     var checkHashtagValidity = function () {
 
@@ -236,10 +236,10 @@
   отправка формы
   */
 
-  var messageError = document.querySelector('.img-upload__message--error');
-  var errorLinkFirst = document.querySelector('.error__link:first-child');
-  var errorLinkLast = document.querySelector('.error__link:last-child');
-  var filesUpload = document.querySelector('#upload-file');
+  var messageError = imageUploadForm.querySelector('.img-upload__message--error');
+  var errorLinkFirst = imageUploadForm.querySelector('.error__link:first-child');
+  var errorLinkLast = imageUploadForm.querySelector('.error__link:last-child');
+  var filesUpload = imageUploadForm.querySelector('#upload-file');
 
   var resetFormStyles = function () {
     imageUploadPreview.classList.remove(imageUploadPreview.classList[1]);

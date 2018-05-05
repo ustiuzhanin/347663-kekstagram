@@ -17,7 +17,7 @@
     var commentCount = bigPicture.querySelector('.social__comment-count');
     commentCount.classList.add('visually-hidden');
 
-    var commentLoadMore = document.querySelector('.social__comment-loadmore');
+    var commentLoadMore = bigPicture.querySelector('.social__comment-loadmore');
     commentLoadMore.classList.add('visually-hidden');
 
     var addComment = function (number) {

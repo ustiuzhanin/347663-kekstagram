@@ -3,6 +3,8 @@
 (function () {
 
   var ESC_KEYCODE = 27;
+  var DEBOUNCE_INTERVAL = 10000;
+  var lastTimeout;
 
   window.util = {
     getRandomInteger: function (min, max) {
@@ -17,6 +19,12 @@
     },
     keyCodes: {
       escape: ESC_KEYCODE
+    },
+    debounce: function (fun) {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
     }
   };
 
