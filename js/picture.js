@@ -6,8 +6,11 @@
 
 (function () {
 
-  var sortingBtns = document.querySelectorAll('.img-filters__button');
   var imageFilters = document.querySelector('.img-filters');
+  var sortingBtns = imageFilters.querySelectorAll('.img-filters__button');
+  var popularSortBtn = imageFilters.querySelector('#filter-popular');
+  var discussedSortBtn = imageFilters.querySelector('#filter-discussed');
+  var randomSortBtn = imageFilters.querySelector('#filter-new');
   var activeButton = 'img-filters__button--active';
   var pictures = [];
   var sortedPictures = [];
@@ -35,9 +38,6 @@
   };
 
   var sortPictures = function (data) {
-    var popularSortBtn = imageFilters.querySelector('#filter-popular');
-    var discussedSortBtn = imageFilters.querySelector('#filter-discussed');
-    var randomSortBtn = imageFilters.querySelector('#filter-new');
 
     if (popularSortBtn.classList.contains(activeButton)) {
       sortPicturesPopular(data);
@@ -66,7 +66,6 @@
         window.util.debounce(sortPictures(pictures));
 
       });
-
     }
   };
 
@@ -88,13 +87,14 @@
   };
 
   var onSuccesHandler = function (data) {
-    imageFilters.classList.remove('img-filters--inactive');
-
     pictures = data;
     picturesRender(pictures);
     changeSorting();
 
     window.preview(pictures);
+    popularSortBtn.classList.remove(activeButton);
+    imageFilters.classList.remove('img-filters--inactive');
+
   };
 
   var onErrorHandler = function (message) {
