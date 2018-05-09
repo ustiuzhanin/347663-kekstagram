@@ -70,6 +70,7 @@
   };
 
   var picturesRender = function (data) {
+    var picturesFragment = document.createDocumentFragment();
     var pictureTemplate = document.querySelector('#picture').content;
     var pictureList = document.querySelector('.pictures');
 
@@ -82,8 +83,9 @@
       pictureElement.querySelector('.picture__stat--comments').textContent = data[i].comments.length;
       pictureElement.querySelector('.picture__link').dataset.number = i;
 
-      pictureList.appendChild(pictureElement);
+      picturesFragment.appendChild(pictureElement);
     }
+    pictureList.appendChild(picturesFragment);
   };
 
   var onSuccesHandler = function (data) {
