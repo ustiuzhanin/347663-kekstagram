@@ -146,7 +146,7 @@
 
   var changeZoom = function () {
 
-    var zoomValue = 100; //это не константа
+    var zoomValue = 100; // это не константа
     pictureZoomValue.value = zoomValue + '%';
     pictureZoom.style.zIndex = '1';
 
