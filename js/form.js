@@ -5,8 +5,13 @@
 */
 
 (function () {
+  var MAX_HASHTAGS_COUNT = 5;
   var MIN_HASHTAG_LENGTH = 2;
   var MAX_HASHTAG_LENGTH = 20;
+  var ZOOM_MAX = 100;
+  var ZOOM_MIN = 25;
+  var ZOOM_STEP = 25;
+
 
   var imageUploadForm = document.querySelector('.img-upload__form');
   var imageUploadPreview = imageUploadForm.querySelector('.img-upload__preview');
@@ -141,28 +146,28 @@
 
   var changeZoom = function () {
 
-    var zoomValue = 100;
+    var zoomValue = 100; //это не константа
     pictureZoomValue.value = zoomValue + '%';
     pictureZoom.style.zIndex = '1';
 
-    var pictureZoomIn = function () {
-      if (zoomValue < 100) {
-        zoomValue += 25;
+    var onPictureZoomIn = function () {
+      if (zoomValue < ZOOM_MAX) {
+        zoomValue += ZOOM_STEP;
         pictureZoomValue.value = zoomValue + '%';
         imageUploadPreview.style.transform = 'scale(' + zoomValue / 100 + ')';
       }
     };
 
-    var pictureZoomOut = function () {
-      if (zoomValue > 25) {
-        zoomValue -= 25;
+    var onPictureZoomOut = function () {
+      if (zoomValue > ZOOM_MIN) {
+        zoomValue -= ZOOM_STEP;
         pictureZoomValue.value = zoomValue + '%';
         imageUploadPreview.style.transform = 'scale(' + zoomValue / 100 + ')';
       }
     };
 
-    pictureZoomPlus.addEventListener('click', pictureZoomIn);
-    pictureZoomMinus.addEventListener('click', pictureZoomOut);
+    pictureZoomPlus.addEventListener('click', onPictureZoomIn);
+    pictureZoomMinus.addEventListener('click', onPictureZoomOut);
 
   };
   changeZoom();
@@ -178,9 +183,7 @@
       for (var i = 0; i < arr.length; i++) {
         var str = arr[i].toLowerCase();
         for (var j = 0; j < result.length; j++) {
-          if (result[j].toLowerCase() === str) {
-            return true;
-          }
+          return result[j].toLowerCase() === str;
         }
         result.push(str);
       }
@@ -190,7 +193,7 @@
     var uploadHashtags = imageUploadForm.querySelector('.text__hashtags');
     var uploadDescription = imageUploadForm.querySelector('.text__description');
 
-    var checkHashtagValidity = function () {
+    var onHashtagValidityCheck = function () {
 
       var hashtagArray = uploadHashtags.value;
       var hashtagArraySplitted = hashtagArray.split(/\s+/g).filter(Boolean);
@@ -200,7 +203,7 @@
       var maxHashtagsError = 'Максимальное количество хэш-тегов - 5';
       var repeatError = 'Хэш-теги не должны повторятся';
 
-      if (hashtagArraySplitted.length <= 5) {
+      if (hashtagArraySplitted.length <= MAX_HASHTAGS_COUNT) {
         for (var i = 0; i < hashtagArraySplitted.length; i++) {
           if (hashtagArraySplitted[i].length < MIN_HASHTAG_LENGTH || hashtagArraySplitted[i].length > MAX_HASHTAG_LENGTH) {
             return uploadHashtags.setCustomValidity(lengthError);
@@ -218,16 +221,16 @@
       return uploadHashtags.setCustomValidity('');
     };
 
-    uploadHashtags.addEventListener('input', checkHashtagValidity);
+    uploadHashtags.addEventListener('input', onHashtagValidityCheck);
 
-    var escPressDisable = function (evt) {
+    var onEscPressDisable = function (evt) {
       if (evt.keyCode === window.util.keyCodes.escape) {
         evt.stopPropagation();
       }
     };
 
-    uploadHashtags.addEventListener('keydown', escPressDisable);
-    uploadDescription.addEventListener('keydown', escPressDisable);
+    uploadHashtags.addEventListener('keydown', onEscPressDisable);
+    uploadDescription.addEventListener('keydown', onEscPressDisable);
 
   };
   checkHashtags();
@@ -275,7 +278,7 @@
   imageUploadForm.addEventListener('submit', onFormSubmit);
 
   window.form = {
-    resetFormStyles: resetFormStyles
+    resetStyles: resetFormStyles
   };
 
 })();

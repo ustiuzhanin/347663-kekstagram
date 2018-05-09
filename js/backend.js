@@ -6,6 +6,11 @@
   var POST_URL = 'https://js.dump.academy/kekstagram';
   var XHR_TIMEOUT = 10000;
 
+  var OK = 200;
+  var REQUEST_ERROR = 400;
+  var RIGHTS_ERROR = 401;
+  var NOT_FOUND_ERROR = 404;
+
   var loadData = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -15,16 +20,16 @@
       var error;
 
       switch (xhr.status) {
-        case 200:
+        case OK:
           onLoad(xhr.response);
           break;
-        case 400:
+        case REQUEST_ERROR:
           error = 'Неверный запрос';
           break;
-        case 401:
+        case RIGHTS_ERROR:
           error = 'Пользователь не авторизирован';
           break;
-        case 404:
+        case NOT_FOUND_ERROR:
           error = 'Ничего не найдено';
           break;
         default:
@@ -53,7 +58,7 @@
     xhr.timeout = XHR_TIMEOUT;
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === OK) {
         onLoad('Данные успешно отправлены');
       } else {
         onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);

@@ -6,6 +6,8 @@
 
 (function () {
   window.preview = function (picturesData) {
+    var COMMENT_AVATAR_MIN = 1;
+    var COMMENT_AVATAR_MAX = 6;
     var picture = document.querySelectorAll('.picture__link');
     var bigPicture = document.querySelector('.big-picture');
     var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
@@ -31,7 +33,7 @@
       var commentAvatar = createElement('img', 'social__picture');
       var commentText;
 
-      commentAvatar.src = 'img/avatar-' + window.util.getRandomInteger(1, 6) + '.svg';
+      commentAvatar.src = 'img/avatar-' + window.util.getRandomInteger(COMMENT_AVATAR_MIN, COMMENT_AVATAR_MAX) + '.svg';
       commentText = document.createTextNode(comment);
       commentItem.appendChild(commentAvatar);
       commentItem.appendChild(commentText);
@@ -42,9 +44,10 @@
     var addComment = function (number) {
       var commentsFragment = document.createDocumentFragment();
 
-      while (bigPictureCommentsList.hasChildNodes()) {
-        bigPictureCommentsList.removeChild(bigPictureCommentsList.firstChild);
-      }
+      var arr = [].slice.call(bigPictureCommentsList.children);
+      arr.forEach(function (item) {
+        item.remove();
+      });
 
       for (var i = 1; i < picturesData[number].comments.length; i++) {
         commentsFragment.appendChild(createComment(picturesData[number].comments[i]));
@@ -53,13 +56,13 @@
       return commentsFragment;
     };
 
-    var popupEscPress = function (evt) {
+    var onEscPress = function (evt) {
       if (evt.keyCode === window.util.keyCodes.escape) {
-        closePicturePopup();
+        onPopupClose();
       }
     };
 
-    var openPicturePopup = function (evt) {
+    var onPopupOpen = function (evt) {
       evt.preventDefault();
       bigPicture.classList.remove('hidden');
       bigPictureImg.src = evt.currentTarget.querySelector('.picture__img').src;
@@ -67,18 +70,18 @@
       bigPictureDescription.textContent = picturesData[evt.currentTarget.dataset.number].comments[0];
       bigPictureCommentsList.appendChild(addComment(evt.currentTarget.dataset.number));
 
-      document.addEventListener('keydown', popupEscPress);
+      document.addEventListener('keydown', onEscPress);
     };
 
-    var closePicturePopup = function () {
+    var onPopupClose = function () {
       bigPicture.classList.add('hidden');
-      document.removeEventListener('keydown', popupEscPress);
+      document.removeEventListener('keydown', onEscPress);
     };
 
     for (var i = 0; i < picture.length; i++) {
-      picture[i].addEventListener('click', openPicturePopup);
+      picture[i].addEventListener('click', onPopupOpen);
     }
-    bigPictureClose.addEventListener('click', closePicturePopup);
+    bigPictureClose.addEventListener('click', onPopupClose);
 
   };
 
